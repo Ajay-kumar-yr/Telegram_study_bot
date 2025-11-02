@@ -18,7 +18,6 @@ telegram-study-bot
 ├── data
 │   ├── chroma_store/         # Persistent ChromaDB Vector Database files
 │   ├── downloaded_notes/     # Temporary folder for downloaded PDFs
-│   └── .gitignore            # Ensures data is IGNORED by Git (CRITICAL)
 ├── .env.example              # Example environment variables configuration
 └── requirements.txt          # Python dependencies
 ```
