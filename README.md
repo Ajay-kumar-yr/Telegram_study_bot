@@ -1,53 +1,89 @@
-Telegram Study Bot
-Overview
-The Telegram Study Bot is an AI-powered assistant designed to help students manage their study materials, download notes, and answer questions related to their subjects. The bot interacts with users through Telegram, providing a user-friendly interface for accessing educational resources.
+# 📚 Telegram study bot
 
-Project Structure
+## Project Overview
+
+The **Telegram study bot** is a comprehensive Telegram bot designed to be an intelligent study assistant. It automates the process of accessing, downloading, and studying university notes by combining robust **web scraping** with an advanced **Retrieval-Augmented Generation (RAG)** system.
+
+The primary goal is to provide a reliable source of truth directly from verified study material, effectively eliminating AI "hallucination" by grounding responses in a local knowledge base.
+
+---
+## project structure
+```
+
 telegram-study-bot
 ├── src
 │   ├── telegram_bot.py       # Main logic for the Telegram bot
 │   ├── scraper.py            # Web scraper for downloading study materials
-│   ├── rag.py                # Handles retrieval-augmented generation (RAG)
-│   └── __init__.py           # Marks the directory as a Python package
-    ├── data
-│       ├── sources.json          # Subject codes and their source URLs
-│       ├── notes_link.json       # Subject codes and downloadable notes links
-|       |-- sub_name.json         # Subject codes matched with subject names
-│       └── .gitkeep              # Keeps the data directory tracked by Git
-├── notes
-│   └── .gitkeep              # Keeps the notes directory tracked by Git
-├── vector_db
-│   └── .gitkeep              # Keeps the vector_db directory tracked by Git
-├── requirements.txt           # Python dependencies for the project
-├── .env.example               # Example environment variables configuration
-├── .gitignore                 # Files and directories to ignore by Git
-├── README.md                  # Documentation for the project
-└── setup.py                   # Packaging information for the project
-Installation
-Clone the repository:
+│   └── rag.py                # Handles retrieval-augmented generation (RAG)
+├── data
+│   ├── chroma_store/         # Persistent ChromaDB Vector Database files
+│   ├── downloaded_notes/     # Temporary folder for downloaded PDFs
+│   └── .gitignore            # Ensures data is IGNORED by Git (CRITICAL)
+├── .env.example              # Example environment variables configuration
+└── requirements.txt          # Python dependencies
+```
+## 🚀 Key Features
 
-git clone <repository-url>
-cd Telegram_Study_Bot
-Create a virtual environment (optional but recommended):
+* **Guided Access:** Uses interactive inline menus for Branch → Semester → Subject selection.
+* **Structured Scraping:** Employs **PyMuPDF4LLM** for superior text extraction that preserves tables and headings.
+* **Smart Downloading:** Scrapes dynamic Google Drive preview links and converts them to **direct download URLs** to retrieve the correct PDF file content.
+* **Vectorized Knowledge Base:** Builds a persistent knowledge base using **ChromaDB** and **HuggingFace Embeddings**.
+* **Dynamic Q&A:** Answers questions using the **DeepSeek Chat LLM** (via OpenRouter), grounded exclusively in the stored notes.
+* **Resource Management:** Automatically deletes downloaded PDF files from the server after they are successfully processed and stored in the database.
 
-python -m venv venv
-source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-Install the required dependencies:
+---
 
-pip install -r requirements.txt
-Set up environment variables:
+## 🛠️ Technology Stack
 
-Copy .env.example to .env and fill in the required values.
-Usage
-Run the bot:
+| Category | Component | Python Package | Purpose |
+| :--- | :--- | :--- | :--- |
+| **Bot Framework** | Main Application | `python-telegram-bot` | Handles all commands, callbacks, and file transfer. |
+| **PDF Processing** | Structure Extraction | `pymupdf4llm` | Extracts text/tables in structured Markdown format. |
+| **Web Scraping** | Network/Parsing | `requests`, `BeautifulSoup` | Fetches HTML and parses subject links. |
+| **Vector Database** | Storage/Indexing | `chromadb`, `sentence-transformers` | Stores and indexes the numerical embeddings of the notes. |
+| **RAG Orchestration**| LLM Integration | `openai`, `python-dotenv` | Manages the API connection to DeepSeek (via OpenRouter) for generation. |
 
-python src/telegram_bot.py
-Interact with the bot on Telegram using the commands:
+---
 
-/start - Start the bot and see the main menu.
-/help - Show the help message.
-/subjects - List all available subjects.
-/download <branch> <subject_code> - Download study materials.
-/ask <question> - Ask a question about your materials.
-Contributing
+## ⚙️ Installation and Setup
+
+### Prerequisites
+1.  **Python 3.10+** and **Git** installed locally.
+2.  **API Keys:** Telegram Bot Token (from @BotFather) and OpenRouter API Key.
+
+## Installation
+1. Clone the repository:
+   ```
+   git clone <repository-url>
+   cd Telegram_Study_Bot
+   ```
+
+2. Create a virtual environment (optional but recommended):
+   ```
+   python -m venv venv
+   source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+   ```
+
+3. Install the required dependencies:
+   ```
+   pip install -r requirements.txt
+   ```
+
+4. Set up environment variables:
+   - Copy `.env.example` to `.env` and fill in the required values.
+
+## Usage
+1. Run the bot:
+   ```
+   python src/telegram_bot.py
+   ```
+
+2. Interact with the bot on Telegram using the commands:
+   - `/start` - Start the bot and see the main menu.
+   - `/help` - Show the help message.
+   - `/notes` - Initiates the menu for Branch/Semester selection, downloads the PDFs, and sends them to the chat.
+   - `/store` - Processes all downloaded notes, extracts the vectors, stores them in ChromaDB.
+   - `/ask <question>` - Ask a question about your materials.
+
+## Contributing
 Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.
