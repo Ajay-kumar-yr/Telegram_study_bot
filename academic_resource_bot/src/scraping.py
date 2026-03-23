@@ -40,7 +40,7 @@ def get_source(branch,sem):
     sources=[]
     merged_list=[]
     try: 
-        link = f"https://saividya.ac.in/study-material-{branch}.html"
+        link = f"https://saividya.ac.in/study-blogs"
 
         web_page = requests.get(link, headers=header).text
         scrape = BeautifulSoup(web_page, "lxml")
